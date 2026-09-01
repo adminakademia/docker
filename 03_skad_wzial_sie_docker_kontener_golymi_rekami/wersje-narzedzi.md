@@ -1,10 +1,10 @@
-# Lekcja 3 — wersje narzędzi użytych podczas nagrania
+# Lekcja 3 — wersje narzędzi użytych podczas lekcji
 
 Kurs "Docker i kontenery dla administratorów sieciowych i DevOps" — AdminAkademia.
 
 Cała lekcja została wykonana i sprawdzona na maszynie `docker01`. Poniżej wersje, na których
-powstały wydruki cytowane w scenariuszu. Jeśli u Ciebie coś wygląda inaczej, zacznij od porównania
-tej listy — najczęściej różnica bierze się z innej wersji nginx-a albo innej dystrybucji.
+powstała lekcja. Jeśli u Ciebie coś wygląda inaczej, zacznij od porównania
+tej listy.
 
 ## Maszyna
 
