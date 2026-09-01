@@ -4,12 +4,15 @@
 #  sprawdz-karte.sh - sprawdzarka karty pracy "namespace -> EFEKT"
 #  Kurs: "Docker i kontenery dla administratorow sieciowych i DevOps"
 #  AdminAkademia - lekcja 3, zadanie samodzielne nr 1
-#  Wersja: 1.0 (2026-08-27)
+#  Wersja: 2.0 (2026-08-28) - dostosowana do lekcji 3 w wersji "nginx golymi rekami":
+#                            szesc namespace'ow robimy na zywo, tylko "user" jest zapowiedzia.
 # ============================================================================
 #
 #  CO ROBI TEN SKRYPT:
 #  Czyta plik "karta-namespace-efekt.md" z biezacego katalogu i sprawdza, czy
 #  dla kazdego z siedmiu namespace'ow wypelniles pola EFEKT i POLECENIE.
+#  Szesc z nich (pid, mnt, uts, ipc, cgroup, net) dokladales do nginx-a w lekcji 3,
+#  wiec wpisujesz to, co widziales. Siodmy (user) to zapowiedz - lekcja 41.
 #  Dodatkowo podpowiada - jako UWAGA, nigdy jako blad - gdy wpisane polecenie
 #  nie zawiera zadnego narzedzia typowego dla danego namespace'u.
 #
@@ -73,7 +76,7 @@ wzorzec() {
         uts)    printf '%s' 'unshare|nsenter|lsns|hostname|uname' ;;
         ipc)    printf '%s' 'unshare|nsenter|lsns|ipcs|ipcmk|ipcrm' ;;
         cgroup) printf '%s' 'unshare|nsenter|lsns|cgroup' ;;
-        net)    printf '%s' 'unshare|nsenter|lsns|ip |ifconfig|ss |netstat|ping' ;;
+        net)    printf '%s' 'unshare|nsenter|lsns|ip |ifconfig|ss |netstat|ping|curl|veth|bridge' ;;
         user)   printf '%s' 'unshare|nsenter|lsns|id|uid_map|gid_map|newuidmap' ;;
     esac
 }
@@ -85,8 +88,8 @@ opis() {
         uts)    printf '%s' 'wlasna nazwa hosta' ;;
         ipc)    printf '%s' 'wlasne kolejki System V' ;;
         cgroup) printf '%s' 'wlasny widok hierarchii cgroup' ;;
-        net)    printf '%s' 'wlasny stos sieciowy - zapowiedz, modul 3' ;;
-        user)   printf '%s' 'wlasne mapowanie uzytkownikow - zapowiedz, modul 10' ;;
+        net)    printf '%s' 'wlasny stos sieciowy - klocek 8 lekcji 3' ;;
+        user)   printf '%s' 'wlasne mapowanie uzytkownikow - zapowiedz, lekcja 41' ;;
     esac
 }
 
