@@ -1,10 +1,10 @@
-# Lekcja 3 — wersje narzędzi użytych podczas lekcji
+# Lekcja 3 — wersje narzędzi użytych podczas nagrania
 
 Kurs "Docker i kontenery dla administratorów sieciowych i DevOps" — AdminAkademia.
 
 Cała lekcja została wykonana i sprawdzona na maszynie `docker01`. Poniżej wersje, na których
-powstała lekcja. Jeśli u Ciebie coś wygląda inaczej, zacznij od porównania
-tej listy.
+powstały wydruki cytowane w scenariuszu. Jeśli u Ciebie coś wygląda inaczej, zacznij od porównania
+tej listy — najczęściej różnica bierze się z innej wersji nginx-a albo innej dystrybucji.
 
 ## Maszyna
 
@@ -65,8 +65,32 @@ mechanizm pozostaje identyczny.
 ## Pozostałe maszyny laboratorium
 
 Namespaces, cgroups, `veth`, mostek i reguły NAT działają tak samo na `docker02` (Rocky Linux)
-i `docker03` (Ubuntu) — to mechanizmy jądra. Różni się wyłącznie instalacja pakietów:
-na Rocky `busybox` mieszka w repozytorium EPEL, a usługa `nginx` nie startuje sama po instalacji.
+i `docker03` (Ubuntu) — to mechanizmy jądra. Różni się natomiast instalacja pakietów oraz kilka
+miejsc w skrypcie `zbuduj-rootfs.sh`, który został napisany pod układ katalogów i nazwy kont
+z Debiana i Ubuntu.
+
+Instalacja: na Rocky `busybox` mieszka w repozytorium EPEL, a usługa `nginx` nie startuje sama
+po instalacji.
+
+Skrypt `zbuduj-rootfs.sh` na Rocky wymaga trzech podmian:
+
+- krok `[4/8]` szuka biblioteki NSS pod ścieżką `/lib/x86_64-linux-gnu/libnss_files.so.2`
+  (katalog multiarch Debiana). W rodzinie RHEL-a biblioteki leżą w `/usr/lib64` (`/lib64` jest
+  tam tylko dowiązaniem). Właściwą ścieżkę podaje `ldconfig -p | grep libnss_files`
+  (albo `find /usr/lib64 -name 'libnss_files.so.2'`). Uwaga: ten krok jest obłożony warunkiem
+  `if [ -e "$NSS" ]`, więc przy złej ścieżce **nie zgłosi błędu** — obraz po prostu powstanie
+  bez biblioteki NSS;
+- krok `[8/8]` kopiuje `/usr/bin/busybox` bez żadnego warunku, więc przy innej ścieżce skrypt
+  przerwie się pod `set -euo pipefail`. Właściwą lokalizację podaje `command -v busybox`;
+- krok `[5/8]` i konfiguracja generowana w `[6/8]`: skrypt przepisuje z gospodarza wiersz
+  użytkownika `www-data` i tę samą nazwę wstawia do `nginx.conf`. Pakiet `nginx` z rodziny
+  RHEL-a zakłada konto `nginx`, nie `www-data` — sprawdzamy `getent passwd www-data` i w razie
+  braku podmieniamy nazwę użytkownika w obu miejscach. Bez tego `grep` dopasuje samo `root`,
+  wyjdzie z kodem 0 (więc `set -e` nie zatrzyma skryptu), a nginx w kontenerze padnie przy
+  starcie na `getpwnam("www-data") failed`.
+
+Same mechanizmy jądra pozostają bez zmian — różnice siedzą w tym, gdzie dystrybucja trzyma pliki
+i jak nazywa konta usług.
 
 ## Komunikaty i lokalizacja
 

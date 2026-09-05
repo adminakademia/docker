@@ -22,6 +22,12 @@ wpisujesz **zapowiedź**: czego się spodziewasz, zanim to zobaczysz. Nikt nie s
 chodzi o to, żebyś miał własną hipotezę, do której wrócisz. Podpowiedź jest w lekcji 3, w sekcji
 "CO ZOSTAJE WSPÓLNE Z GOSPODARZEM": sprawdź, co pokazało polecenie `id` w kontenerze.
 
+> **Dlaczego siedem, skoro `lsns` pokazuje osiem wierszy?** Ta karta obejmuje siedem przestrzeni
+> nazw, z których składamy kontener. Jądro ma jeszcze jedną, najmłodszą — `time`, dodaną
+> w jądrze 5.6 w 2020 roku — która pozwala podać procesowi inny czas rozruchu i inny zegar
+> monotoniczny. Docker jej domyślnie nie używa i my też nie, dlatego w wyniku `lsns` widzimy
+> w tym wierszu przestrzeń gospodarza. Karty o nią nie uzupełniamy.
+
 Sprawdzenie wypełnienia:
 
     bash sprawdz-karte.sh
